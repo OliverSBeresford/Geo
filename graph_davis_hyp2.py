@@ -5,6 +5,14 @@ import numpy as np
 from geopy.distance import geodesic
 from scipy.stats import linregress
 from sklearn.neighbors import KernelDensity  # Ensure KernelDensity is imported
+import os
+import shutil
+
+# Ensure output directories exist and are empty
+for folder in ["images", "html"]:
+    if os.path.exists(folder):
+        shutil.rmtree(folder)
+    os.makedirs(folder)
 
 # Central Davis Square
 center_coords = (42.39645794794289, -71.12240324262818)
@@ -114,7 +122,7 @@ def plot_with_r2(x, y, x_label, y_label, title, color):
     plt.ylabel(y_label)
     plt.title(title)
     plt.tight_layout()
-    plt.savefig(f"{title.replace(' ', '_').lower()}.png", dpi=300)
+    plt.savefig(f"images/{title.replace(' ', '_').lower()}.png", dpi=300)
     plt.show()
 
 # Plotting correlations
@@ -143,7 +151,7 @@ title = "Air Pollution by Zone"
 plt.title(title)
 plt.ylabel("Air Pollution (PM2.5)")
 plt.tight_layout()
-plt.savefig(f"{title.replace(' ', '_').lower()}.png", dpi=300)
+plt.savefig(f"images/{title.replace(' ', '_').lower()}.png", dpi=300)
 plt.show()
 
 # Fixing the issue by explicitly handling different value columns from the same dataset
@@ -194,6 +202,7 @@ def plot_heatmap(df, value_col, title):
     plt.title(title)
     plt.legend()
     plt.tight_layout()
+    plt.savefig(f"images/{title.replace(' ', '_').lower()}.png", dpi=300)
     plt.show()
 
 plot_heatmap(car_df, "Car Traffic", "Heatmap of Car Traffic")
@@ -215,7 +224,7 @@ def plot_folium_heatmap(df, value_col, title):
     # Increase radius and add blur for more interpolation
     HeatMap(heat_data, radius=50, blur=35, max_zoom=13).add_to(m)
     
-    title_filename = title.lower().replace(" ", "_") + ".html"
+    title_filename = "html/" + title.lower().replace(" ", "_") + ".html"
     m.save(title_filename)
     print(f"Saved {title} as {title_filename}")
 

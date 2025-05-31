@@ -1,0 +1,8 @@
+pandas
+numpy
+matplotlib
+seaborn
+geopy
+scipy
+scikit-learn
+folium

@@ -187,19 +187,30 @@ def plot_heatmap(df, value_col, title):
     y = df["Latitude"].values
     z = df[value_col].values
 
-    xi, yi = np.mgrid[x.min():x.max():100j, y.min():y.max():100j]
-    xy_sample = np.vstack([x, y]).T
+    # Set grid centered on Davis Square
+    center_lon, center_lat = center_coords[1], center_coords[0]
+    x_range = (x.min(), x.max())
+    y_range = (y.min(), y.max())
+    # Expand range if needed to ensure center is in the middle
+    x_pad = max(center_lon - x.min(), x.max() - center_lon)
+    y_pad = max(center_lat - y.min(), y.max() - center_lat)
+    xi = np.linspace(center_lon - x_pad, center_lon + x_pad, 100)
+    yi = np.linspace(center_lat - y_pad, center_lat + y_pad, 100)
+    xi, yi = np.meshgrid(xi, yi)
 
+    xy_sample = np.vstack([x, y]).T
     kde = KernelDensity(bandwidth=0.0008)
     kde.fit(xy_sample, sample_weight=z)
-    # Scale the KDE output to match the range of the original data for correct colorbar labeling
     zi = np.exp(kde.score_samples(np.vstack([xi.ravel(), yi.ravel()]).T)).reshape(xi.shape)
-    # Rescale zi to the range of the original data
     zi = zi / zi.max() * z.max() if zi.max() > 0 else zi
 
     plt.contourf(xi, yi, zi, cmap='viridis')
-    cbar = plt.colorbar(label=value_col)
-    cbar.ax.set_ylabel(value_col)
+    # Label air pollution with units
+    label = value_col
+    if value_col.lower() == "air pollution":
+        label += " (PM2.5)"
+    cbar = plt.colorbar(label=label)
+    cbar.ax.set_ylabel(label)
     plt.scatter(x, y, c='red', s=20, edgecolor='k', label='Data Points')
     plt.xlabel("Longitude")
     plt.ylabel("Latitude")

@@ -26,7 +26,7 @@ This project analyzes and visualizes environmental data collected around Davis S
 
 Install dependencies with:
 ```sh
-pip install pandas numpy matplotlib seaborn geopy scipy scikit-learn folium
+pip install -r requirements.txt
 ```
 
 ## Usage
@@ -41,6 +41,8 @@ pip install pandas numpy matplotlib seaborn geopy scipy scikit-learn folium
 - `graph_davis_hyp2.py`: Main analysis and visualization script.
 - `*.png`: Correlation and boxplot images.
 - `heatmap_of_*.html`: Interactive heatmaps for each variable.
+- `requirements.txt`: Python dependencies for the project.
+- `LICENSE`: MIT License for this project.
 
 ## Notes
 - All coordinates are centered around Davis Square, Somerville, MA.

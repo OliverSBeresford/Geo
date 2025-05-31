@@ -192,10 +192,14 @@ def plot_heatmap(df, value_col, title):
 
     kde = KernelDensity(bandwidth=0.0008)
     kde.fit(xy_sample, sample_weight=z)
+    # Scale the KDE output to match the range of the original data for correct colorbar labeling
     zi = np.exp(kde.score_samples(np.vstack([xi.ravel(), yi.ravel()]).T)).reshape(xi.shape)
+    # Rescale zi to the range of the original data
+    zi = zi / zi.max() * z.max() if zi.max() > 0 else zi
 
     plt.contourf(xi, yi, zi, cmap='viridis')
-    plt.colorbar(label=value_col)
+    cbar = plt.colorbar(label=value_col)
+    cbar.ax.set_ylabel(value_col)
     plt.scatter(x, y, c='red', s=20, edgecolor='k', label='Data Points')
     plt.xlabel("Longitude")
     plt.ylabel("Latitude")
